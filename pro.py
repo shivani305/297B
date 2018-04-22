@@ -6,7 +6,7 @@ from mininet.cli import CLI
 from mininet.util import irange
 from mininet.link import TCLink
 
-c0 = RemoteController('c0', ip='192.168.89.172')
+c0 = RemoteController('c0', ip='192.168.181.130')
 
 class NetworkTopo(Topo):
     def build(self):
@@ -43,7 +43,25 @@ class NetworkTopo(Topo):
        self.addLink(s5,s8)
        self.addLink(s2,s8)
        self.addLink(s4,s8)
-       
+
+       self.addLink(s1,h1)
+       self.addLink(s2,h2)
+       self.addLink(s3,h3)
+       self.addLink(s4,h4)
+       self.addLink(s5,h5)
+       self.addLink(s6,h6)
+       self.addLink(s7,h7)
+       self.addLink(s8,h8)
+       self.addLink(g1,s1)
+       self.addLink(g1,s1)
+       self.addLink(g1,s2)
+       self.addLink(g1,s3)
+       self.addLink(g1,s4)
+       self.addLink(g1,s5)
+       self.addLink(g1,s6)
+       self.addLink(g1,s7)
+       self.addLink(g1,s8)
+
 def run():
        topo = NetworkTopo()
        net = Mininet(topo=topo, controller=c0)
