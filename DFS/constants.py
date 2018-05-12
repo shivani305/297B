@@ -1,4 +1,4 @@
-SCOVERY_PERIOD = 10  # For discovering topology.
+DISCOVERY_PERIOD = 10  # For discovering topology.
 
 DELAY_DETECTING_PERIOD = 5  # For detecting link delay.
 
