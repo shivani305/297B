@@ -1,3 +1,4 @@
+#this is edited
 import logging
 import struct
 import networkx as nx
@@ -34,8 +35,8 @@ class DynamicFlowSteering(app_manager.RyuApp):
 
     WEIGHT_MODEL = {'hop': 'weight', 'delay': "delay", "bw": "bw"}
 
-    def _init_(self, *args, **kwargs):
-        super(DynamicFlowSteering, self)._init_(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(DynamicFlowSteering, self).__init__(*args, **kwargs)
         self.name = 'DFS'
         self.topology_api_app = self
 
@@ -57,7 +58,7 @@ class DynamicFlowSteering(app_manager.RyuApp):
         self.shortest_paths = None
 
         # Start a green thread to discover network resource.
-        self.discover_thread = hub.spawn(self._discover)
+        self.discover_thread = hub.spawn(self.topology_discover)
 
         ##from delay
         # Get the active object of swicthes and awareness module.
@@ -65,7 +66,7 @@ class DynamicFlowSteering(app_manager.RyuApp):
         self.sw_module = lookup_service_brick('switches')
 
         self.echo_latency = {}
-        self.measure_thread = hub.spawn(self._detector)
+        self.measure_thread = hub.spawn(self.latency_detector)
 
 
     def arp_forwarding(self, msg, src_ip, dst_ip):
@@ -376,7 +377,7 @@ class DynamicFlowSteering(app_manager.RyuApp):
                         return dst_port
         return None
 
-    ####delay code from here
+    #### latency/delay measurement starts from here.
     @set_ev_cls(ofp_event.EventOFPStateChange,
                 [MAIN_DISPATCHER, DEAD_DISPATCHER])
     def _state_change_handler(self, ev):
@@ -390,11 +391,7 @@ class DynamicFlowSteering(app_manager.RyuApp):
                 self.logger.debug('Unregister datapath: %016x', datapath.id)
                 del self.datapaths[datapath.id]
 
-    def _detector(self):
-        """
-            Delay detecting functon.
-            Send echo request and calculate link delay periodically
-        """
+    def latency_detector(self):
         while CONF.weight == 'delay':
             self._send_echo_request()
             self.create_link_delay()
@@ -502,7 +499,7 @@ class DynamicFlowSteering(app_manager.RyuApp):
 
 
     #####Network Awareness from here
-    def _discover(self):
+    def topology_discover(self):
         i = 0
         while True:
             self.show_topology()
@@ -695,3 +692,5 @@ class DynamicFlowSteering(app_manager.RyuApp):
             all_port_table = self.switch_port_table[sw]
             interior_port = self.interior_ports[sw]
             self.access_ports[sw] = all_port_table - interior_port
+
+
