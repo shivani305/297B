@@ -157,7 +157,7 @@ class DynamicFlowSteering(app_manager.RyuApp):
                 paths = shortest_paths.get(src).get(dst)
                 return paths[0]
             except:
-                paths = self.k_shortest_paths(graph, src, dst,
+                paths = self.k_shortestpaths_from_src_to_dst(graph, src, dst,
                                                         weight=weight)
 
                 shortest_paths.setdefault(src, {})
